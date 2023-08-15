@@ -39,12 +39,64 @@ router.post("/create",async (req,res)=>{
     }
 })
 
+
 router.get("/list", async (req,res)=>{
     try{
         const response = await flightsModel.find({})
         res.json(response);
 
     }catch(error){
+        res.json(error)
+    }
+})
+
+
+router.post("/findone/:id", async(req,res)=>{
+    const id = req.params.id;
+
+    try{
+        const response = await flightsModel.findOne({_id:id});
+        res.json(response);
+    }catch(error){
+        res.json(error)
+    }
+})
+
+
+router.post("/update/:id" , async(req,res)=>{
+    const id = req.params.id;
+    const {
+        airline,
+        departureTime,
+        departureDate,
+        ArrivalTime,
+        ArrivalDate,
+        economyPrice,
+        businessPrice
+    } = req.body;
+
+    try{
+        const response = await flightsModel.findByIdAndUpdate(id, {$set: {airline,
+            departureTime,
+            departureDate,
+            ArrivalTime,
+            ArrivalDate,
+            economyPrice,
+            businessPrice}})
+
+        res.json(response);
+    }catch(error){
+        res.json(error);
+    }
+})
+
+
+router.delete("/delete/:id", async(req,res)=>{
+    const id = req.params.id;
+    try {
+        const response = await flightsModel.findOneAndRemove({_id:id})
+        res.json(response);
+    } catch (error) {
         res.json(error)
     }
 })
